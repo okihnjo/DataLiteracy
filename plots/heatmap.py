@@ -11,7 +11,7 @@ pd.set_option("display.max_columns", None)
 
 
 df = pd.read_csv(
-    "../data/testlizenz-tuebingen-dataliteracy4students_1700939273256.csv",
+    "../data/testlizenz-tuebingen-dataliteracy4students_1706200535571/testlizenz-tuebingen-dataliteracy4students_1706200535571.csv",
     sep=";",
     encoding="unicode_escape",
 )
@@ -44,12 +44,12 @@ for column in df.columns:
 
 path_tue_shp = "../data/KLGL_Stadtteile_Shape/KLGL_Stadtteile_Shape.shp"
 tuebingen_gdf = gpd.read_file(path_tue_shp)
-df_kauf = (
-    df_w_loc[df_w_loc["nachfrageart"] == "kauf"]
-    .groupby(["oadr_u2"])
-    .size()
-    .reset_index(name="count_kauf")
-)
+# df_kauf = (
+#     df_w_loc[df_w_loc["nachfrageart"] == "kauf"]
+#     .groupby(["oadr_u2"])
+#     .size()
+#     .reset_index(name="count_kauf")
+# )
 df_miete = (
     df_w_loc[df_w_loc["nachfrageart"] == "miete"]
     .groupby(["oadr_u2"])
@@ -274,6 +274,7 @@ df_people = pd.DataFrame(data)
 df_people = df_people.set_index("region")
 # calculate mean from 2016 to 2022
 mean_pop = df_people.mean(axis=1).round(0).astype(int)
+print(mean_pop)
 
 
 shp_dict = {
@@ -303,7 +304,7 @@ shp_dict = {
 }
 sorted_dict = dict(sorted(shp_dict.items(), key=lambda item: item[1]))
 tuebingen_gdf["region"] = sorted_dict.keys()
-tuebingen_gdf = tuebingen_gdf.join(df_kauf.set_index("oadr_u2"), on="region")
+# tuebingen_gdf = tuebingen_gdf.join(df_kauf.set_index("oadr_u2"), on="region")
 tuebingen_gdf = tuebingen_gdf.join(df_miete.set_index("oadr_u2"), on="region")
 tuebingen_gdf = tuebingen_gdf.join(mean_pop.rename("population"), on="region")
 
@@ -393,8 +394,8 @@ for idx, row in tuebingen_gdf.iterrows():
 
 # Add labels and legend
 plt.title("Tübingen, Germany - Regions Heatm")
-axs[0].set_title("Rental listings from 2012/01 to 2023/12")
-axs[1].set_title("Rental listings per inhabitants from 2012/01 to 2023/12")
+axs[0].set_title("Rental offers from 2012/01 to 2023/12")
+axs[1].set_title("Rental offers per inhabitant from 2012/01 to 2023/12")
 
 # Hide X and Y axes label marks
 # axs.xaxis.set_tick_params(labelbottom=False)
