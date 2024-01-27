@@ -311,21 +311,23 @@ tuebingen_gdf = tuebingen_gdf.join(mean_pop.rename("population"), on="region")
 tuebingen_gdf["ratio"] = tuebingen_gdf["count_miete"] / tuebingen_gdf["population"]
 
 # rent
-colors = [(1, 1, 1), (1, 1, 0), (1, 0, 0)]
+from tueplots.constants.color import palettes, rgb
+
+colors = [(1, 1, 1), rgb.tue_gold, rgb.tue_red]
 cmap_white_yellow_red = LinearSegmentedColormap.from_list(
     "white_yellow_red", colors, N=256
 )
 
 short_labels = {
-    "Südstadt": "Sdst",
-    "Kilchberg": "Klb",
+    "Südstadt": "Süd",
+    "Kilchberg": "Kil",
     "De-Zentrum": "DZ",
     "Bühl": "Bhl",
-    "Österberg/Gartenstraße": "Östr",
-    "Denzenberg/Sand": "Sand",
+    "Österberg/Gartenstraße": "Ö",
+    "Denzenberg/Sand": "S",
     "Wanne": "Wn",
-    "Feuerhägle/Mühlenviertel": "Fhgl/Mvrtl",
-    "Aeule": "Ae",
+    "Feuerhägle/Mühlenviertel": "F",
+    "Aeule": "-",
     "Schönblick/Waldhäuser Ost": "WHO",
     "Hagelloch": "Hgl",
     "Lustnau-Zentrum/Herrlesberg/Stäudach": "Lust",
@@ -333,8 +335,8 @@ short_labels = {
     "Gartenstadt": "Gst",
     "Neuhalde": "Nhd",
     "Hirschau": "Hrsch",
-    "Weilheim": "Wlm",
-    "Pfrondorf": "Pfrd",
+    "Weilheim": "Wh",
+    "Pfrondorf": "Pfr",
     "Unterjesingen": "Ujsg",
     "Au/Unterer Wert/Französiches Viertel": "FV",
     "Zentrum": "Z",
@@ -352,11 +354,12 @@ from matplotlib.colors import LogNorm
 tuebingen_gdf.plot(
     ax=axs[0],
     cmap=cmap_white_yellow_red,
-    edgecolor="black",
+    edgecolor=rgb.tue_dark,
     column="count_miete",
     legend=True,
     norm=LogNorm(
-        vmin=tuebingen_gdf["count_miete"].min(), vmax=tuebingen_gdf["count_miete"].max()
+        vmin=10,  # tuebingen_gdf["count_miete"].min(),
+        vmax=1000,  # tuebingen_gdf["count_miete"].max(),
     ),  # Set norm to LogNorm for logarithmic scale
 )
 
@@ -364,13 +367,13 @@ tuebingen_gdf.plot(
 # Plot the GeoDataFrame with a heatmap based on density values using the custom colormap
 tuebingen_gdf.plot(
     ax=axs[1],
-    cmap="Greens",
-    edgecolor="black",
+    cmap=cmap_white_yellow_red,
+    edgecolor=rgb.tue_dark,
     column="ratio",
     legend=True,
-    norm=LogNorm(
-        vmin=tuebingen_gdf["ratio"].min(), vmax=tuebingen_gdf["ratio"].max()
-    ),  # Set norm to LogNorm for logarithmic scale
+    # norm=LogNorm(
+    #     vmin=tuebingen_gdf["ratio"].min(), vmax=tuebingen_gdf["ratio"].max()
+    # ),  # Set norm to LogNorm for logarithmic scale
 )
 # Add labels for each region
 for idx, row in tuebingen_gdf.iterrows():
