@@ -14,13 +14,13 @@ plt.rcParams.update(
 )
 
 df = pd.read_csv(
-    "../data/testlizenz-tuebingen-dataliteracy4students_1700939273256.csv",
+    "../data/testlizenz-tuebingen-dataliteracy4students_1706200535571/testlizenz-tuebingen-dataliteracy4students_1706200535571.csv",
     sep=";",
     header=0,
     encoding="unicode_escape",
     decimal=",",
 )
-print(df.columns)
+df['kstn_miete_kalt_pqm'].dropna(inplace=True)
 df = df[df["nachfrageart"]=="miete"]
 df["year"] = df["startdate"].str[:4]
 df["month"] = pd.DatetimeIndex(df["startdate"]).month
@@ -60,14 +60,14 @@ plt.bar(
     bar_positions_removed,
     monthly_removed_counts_summed["total_removed_count"],
     width=bar_width,
-    color=rgb.tue_blue,
+    color=rgb.tue_red,
     # alpha=0.7,
     label="Removed",
 )
 
-plt.title("Amount Of Flats Listed And Removed Per Month Over 10 Years")
+plt.title("Offers Per Month From 2012/01 To 2023/12")
 plt.xlabel("Months")
-plt.ylabel("Total Number of Flats")
+plt.ylabel("Total Number Of Offers")
 plt.xticks(
     months,
     [
