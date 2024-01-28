@@ -24,6 +24,7 @@ df = df[df["nachfrageart"] == "miete"]
 df["year"] = df["startdate"].str[:4]
 df["month"] = pd.DatetimeIndex(df["startdate"]).month
 df["year_removed"] = df["enddate"].str[:4]
+df = df[df["year_removed"] != "2024"]
 df["month_removed"] = pd.DatetimeIndex(df["enddate"]).month
 monthly_counts = df.groupby(["year", "month"]).size().reset_index(name="count")
 monthly_counts_summed = (
@@ -47,9 +48,11 @@ bar_positions_removed = months + bar_width / 2
 
 plt.rcParams.update(bundles.icml2022(column="half", nrows=1, ncols=1, usetex=True))
 
+num_years = len([x for x in df["year_removed"].unique() if x == x])
+print(num_years)
 plt.bar(
     bar_positions_added,
-    monthly_counts_summed["total_count"],
+    monthly_counts_summed["total_count"] / num_years,
     width=bar_width,
     color=rgb.tue_gold,
     # alpha=0.7,
@@ -57,14 +60,14 @@ plt.bar(
 )
 plt.bar(
     bar_positions_removed,
-    monthly_removed_counts_summed["total_removed_count"],
+    monthly_removed_counts_summed["total_removed_count"] / num_years,
     width=bar_width,
     color=rgb.tue_red,
     # alpha=0.7,
     label="Removed",
 )
 
-plt.title("Offers Per Month From 2012/01 To 2023/12")
+plt.title("Average Offers Per Month From 2012/01 To 2023/12")
 plt.xlabel("Months")
 plt.ylabel("Total Number Of Offers")
 plt.xticks(
