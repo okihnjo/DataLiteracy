@@ -425,9 +425,8 @@ for idx, row in tuebingen_gdf.iterrows():
 
 
 # Add labels and legend
-plt.title("Tübingen, Germany - Regions Heatm")
-axs[0].set_title("Rental offers from 2012/01 to 2023/12")
-axs[1].set_title("Rental offers per inhabitant from 2012/01 to 2023/12")
+axs[0].set_title("Rental Offers From 2012/01 To 2023/12")
+axs[1].set_title("Rental Offers Per Inhabitant From 2012/01 To 2023/12")
 
 # Hide X and Y axes label marks
 # axs.xaxis.set_tick_params(labelbottom=False)
