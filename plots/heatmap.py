@@ -1,8 +1,6 @@
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib.colors import LinearSegmentedColormap
 from pandas.api.types import is_object_dtype
 from tueplots import bundles
@@ -274,7 +272,7 @@ df_people = pd.DataFrame(data)
 df_people = df_people.set_index("region")
 # calculate mean from 2016 to 2022
 mean_pop = df_people.mean(axis=1).round(0).astype(int)
-print(mean_pop)
+# print(mean_pop)
 
 
 shp_dict = {
@@ -318,6 +316,9 @@ colors = [(1, 1, 1), rgb.tue_gold, rgb.tue_red]
 cmap_white_yellow_red = LinearSegmentedColormap.from_list(
     "white_yellow_red", colors, N=256
 )
+cmap_white_silver_blue = LinearSegmentedColormap.from_list(
+    "white_silver_blue", [(1,1,1), rgb.tue_gray, rgb.tue_blue], N=256
+)
 
 short_labels = {
     "Südstadt": "Süd",
@@ -326,15 +327,15 @@ short_labels = {
     "Bühl": "Bhl",
     "Österberg/Gartenstraße": "Ö",
     "Denzenberg/Sand": "S",
-    "Wanne": "Wn",
+    "Wanne": "Wanne",
     "Feuerhägle/Mühlenviertel": "F",
-    "Aeule": "-",
+    "Aeule": "a",
     "Schönblick/Waldhäuser Ost": "WHO",
     "Hagelloch": "Hgl",
     "Lustnau-Zentrum/Herrlesberg/Stäudach": "Lust",
     "Bebenhausen": "Bbh",
     "Gartenstadt": "Gst",
-    "Neuhalde": "Nhd",
+    "Neuhalde": "Neu",
     "Hirschau": "Hrsch",
     "Weilheim": "Wh",
     "Pfrondorf": "Pfr",
@@ -347,6 +348,7 @@ short_labels = {
 
 
 plt.rcParams.update(bundles.icml2022(column="half", nrows=3))
+plt.rcParams["axes.titlesize"] = 7
 # Create a larger plot with a specified size
 fig, axs = plt.subplots(2, 1)
 from matplotlib.colors import LogNorm
@@ -360,15 +362,18 @@ tuebingen_gdf.plot(
     legend=True,
     norm=LogNorm(
         vmin=10,  # tuebingen_gdf["count_miete"].min(),
-        vmax=1000,  # tuebingen_gdf["count_miete"].max(),
+        vmax=tuebingen_gdf["count_miete"].max(),
     ),  # Set norm to LogNorm for logarithmic scale
 )
+
+# print("Min count_miete:", tuebingen_gdf[tuebingen_gdf["count_miete"] == tuebingen_gdf["count_miete"].min()])
+# print("Max count_miete:", tuebingen_gdf[tuebingen_gdf["count_miete"] == tuebingen_gdf["count_miete"].max()])
 
 
 # Plot the GeoDataFrame with a heatmap based on density values using the custom colormap
 tuebingen_gdf.plot(
     ax=axs[1],
-    cmap=cmap_white_yellow_red,
+    cmap=cmap_white_silver_blue,
     edgecolor=rgb.tue_dark,
     column="ratio",
     legend=True,
@@ -382,14 +387,41 @@ for idx, row in tuebingen_gdf.iterrows():
         row["region"], row["region"]
     )  # Use the short label if available
     x, y = row["geometry"].centroid.coords[0]
-    if row["region"] == "Wanne":
-        x, y = x + 200.0105, y - 0.0005
-    if row["region"] == "Hagelloch":
-        x, y = x - 500.0105, y - 600.0005
-    if row["region"] == "Neuhalde":
-        x, y = x - 2, y + 600.0005
-    axs[0].annotate(short_label, xy=(x, y), ha="center", color="black")
-    axs[1].annotate(short_label, xy=(x, y), ha="center", color="black")
+    # negative y = south
+    # negative x = west
+    match row["region"]:
+        case "Wanne":
+            x, y = x - 100, y + 300
+        case "Hagelloch":
+            x, y = x, y - 700
+        case "Neuhalde":
+            x, y = x - 250, y - 1500
+        case "Denzenberg/Sand":
+            x, y = x, y - 300
+        case "Universität":
+            x, y = x + 300, y - 500
+        case "Zentrum":
+            x, y = x, y - 200
+        case "Feuerhägle/Mühlenviertel":
+            x, y = x - 100, y
+        case "Schönblick/Waldhäuser Ost":
+            x, y = x + 200, y
+        case "Österberg/Gartenstraße":
+            x, y = x, y - 100
+        case "De-Zentrum":
+            x, y = x - 300, y
+        case "Au/Unterer Wert/Französiches Viertel":
+            x, y = x + 150, y
+        case "Lustnau-Zentrum/Herrlesberg/Stäudach":
+            x, y = x - 100, y
+        case "Aeule":
+            x, y = x + 70, y - 75
+        case "Gartenstadt":
+            x, y = x - 100, y
+        case _:
+            x, y = x, y
+    axs[0].annotate(short_label, xy=(x, y), ha="center", color="black", fontsize=7)
+    axs[1].annotate(short_label, xy=(x, y), ha="center", color="black", fontsize=7)
 
 
 # Add labels and legend
