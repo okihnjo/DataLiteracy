@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from tueplots import bundles, cycler, markers
-from tueplots.constants import markers as marker_constants
+from pandas.api.types import is_object_dtype
+from tueplots import bundles, cycler
 from tueplots.constants.color import palettes
 
 # Increase the resolution of all the plots below
@@ -13,8 +12,29 @@ plt.rcParams.update(
     cycler.cycler(color=palettes.tue_plot)  # marker=marker_constants.o_sized,
 )
 
-df_var = pd.read_csv("../data/df_var.csv", sep=",", header=0)
+df = pd.read_csv(
+    "../data/testlizenz-tuebingen-dataliteracy4students_rt_stuttgart/testlizenz-tuebingen-dataliteracy4students_1706088512814.csv",
+    sep=";",
+    encoding="unicode_escape",
+    header=0,
+)
+df_copy = df.copy()
+for column in df.columns:
+    if is_object_dtype(df[column]):
+        if df[column].str.contains(",").any():
+            df[column] = df[column].str.replace(",", ".").astype(float)
+            df_copy[column] = df_copy[column].str.replace(",", ".").astype(float)
 
+df_copy["endyear"] = pd.to_datetime(df_copy["enddate"]).dt.year
+df_var = (
+    df_copy.groupby(["oadr_ort", "endyear"])
+    .agg(
+        mean_pqm=("kstn_miete_kalt_pqm", "mean"),
+        # median_pqm=("kstn_miete_kalt_pqm", "median"),
+    )
+    .reset_index()
+)
+df_var = df_var.sort_values(by=["oadr_ort", "endyear"], ascending=True)
 
 # Assuming df_var is your DataFrame
 # Get unique values for 'oadr_ort' for coloring and legend
@@ -25,8 +45,8 @@ df_var = pd.read_csv("../data/df_var.csv", sep=",", header=0)
 # Plotting each group
 for oadr_ort, group_data in df_var.groupby("oadr_ort"):
     plt.plot(
-        group_data["startyear"],
-        group_data["kstn_miete_kalt_pqm"],
+        group_data["endyear"],
+        group_data["mean_pqm"],
         marker="o",
         markersize=3,
         # linewidth=1,
@@ -52,7 +72,7 @@ for oadr_ort, group_data in df_var.groupby("oadr_ort"):
 
 # Enhancing the plot
 plt.title("Mean Rent per Square Meter Over Time")
-plt.xlabel("Year-Month")
+plt.xlabel("Year")
 plt.ylabel("Mean Rent per Square Meter")
 
 # plt.xticks(rotation=45)
