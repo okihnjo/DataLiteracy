@@ -71,9 +71,9 @@ for oadr_ort, group_data in df_var.groupby("oadr_ort"):
     #                  horizontalalignment='left', color='black')
 
 # Enhancing the plot
-plt.title("Mean Rent per Square Meter Over Time")
+plt.title("Rental Apartment Prices Over Time")
 plt.xlabel("Year")
-plt.ylabel("Mean Rent per Square Meter")
+plt.ylabel("Mean Rent Per m²")
 
 # plt.xticks(rotation=45)
 plt.xlim(2012, 2023)
