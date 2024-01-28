@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 from tueplots import bundles, cycler, markers
 from tueplots.constants import markers as marker_constants
@@ -20,8 +19,8 @@ df = pd.read_csv(
     encoding="unicode_escape",
     decimal=",",
 )
-df['kstn_miete_kalt_pqm'].dropna(inplace=True)
-df = df[df["nachfrageart"]=="miete"]
+df["kstn_miete_kalt_pqm"].dropna(inplace=True)
+df = df[df["nachfrageart"] == "miete"]
 df["year"] = df["startdate"].str[:4]
 df["month"] = pd.DatetimeIndex(df["startdate"]).month
 df["year_removed"] = df["enddate"].str[:4]
