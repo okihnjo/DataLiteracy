@@ -108,11 +108,11 @@ for region in selected_regions:
 
     # Creating scatter plot for the selected region
     scatter = ax.scatter(
-        region_data["startdate_ordinal"],
-        region_data["kstn_miete_kalt_pqm"],
+        region_data["startdate_ordinal"][::2],
+        region_data["kstn_miete_kalt_pqm"][::2],
         label=region,
         marker=".",
-        alpha=0.5,
+        alpha=0.4,
         vmin=date(2012, 1, 1).toordinal(),
         vmax=date(2023, 12, 31).toordinal(),
     )
@@ -125,7 +125,7 @@ for region in selected_regions:
         [region_data["startdate_ordinal"].min(), region_data["startdate_ordinal"].max()]
     )
     y = slope * x + intercept
-    ax.plot(x, y)
+    ax.plot(x, y, linewidth=2)
 
 # Adding the overall regression line for 'All data'
 
@@ -135,11 +135,11 @@ x_tue = np.array(
     [df_complete["startdate_ordinal"].min(), df_complete["startdate_ordinal"].max()]
 )
 y_tue = tue_slope * x_tue + tue_intercept
-(line_all_data,) = ax.plot(x_tue, y_tue, color=rgb.tue_gold, label="Tübingen")
+(line_all_data,) = ax.plot(x_tue, y_tue, color=rgb.tue_gold, label="Tübingen", linewidth=2)
 
 # Formatting the plot
 ax.set_title("Scatter Plot And Regression For Selected Regions")
-ax.set_ylabel("Cold Rent Per m² in €")
+ax.set_ylabel("Cold Rent Per m² In €")
 plt.xlim(date(2012, 1, 1).toordinal(), date(2023, 12, 31).toordinal())
 new_labels = [date.fromordinal(int(item)) for item in ax.get_xticks()]
 ax.set_xticklabels(new_labels, rotation=25)  # rotation = 45
