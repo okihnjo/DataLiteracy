@@ -72,7 +72,7 @@ for oadr_ort, group_data in df_var.groupby("oadr_ort"):
 
 # Enhancing the plot
 plt.title("Rental Apartment Prices Over Time")
-plt.xlabel("Year")
+plt.xlabel("Years")
 plt.ylabel("Mean Rent Per m²")
 
 # plt.xticks(rotation=45)
