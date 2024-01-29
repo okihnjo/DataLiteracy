@@ -36,12 +36,6 @@ df_var = (
 )
 df_var = df_var.sort_values(by=["oadr_ort", "endyear"], ascending=True)
 
-# Assuming df_var is your DataFrame
-# Get unique values for 'oadr_ort' for coloring and legend
-# unique_oadr_ort = df_var["oadr_ort"].unique()
-# colors = plt.cm.viridis(np.linspace(0, 1, len(unique_oadr_ort)))
-# oadr_ort_color = dict(zip(unique_oadr_ort, colors))
-
 # Plotting each group
 for oadr_ort, group_data in df_var.groupby("oadr_ort"):
     plt.plot(
@@ -70,10 +64,9 @@ for oadr_ort, group_data in df_var.groupby("oadr_ort"):
     #         plt.text(row['startyear'] + x_offset, row['kstn_miete_kalt_pqm'] + y_offset, percent_text,
     #                  horizontalalignment='left', color='black')
 
-# Enhancing the plot
-plt.title("Rental Apartment Prices Over Time")
+plt.title("Development Of Residential Rents")
 plt.xlabel("Years")
-plt.ylabel("Mean Rent Per m²")
+plt.ylabel("Mean Rent Per m² in €")
 
 # plt.xticks(rotation=45)
 plt.xlim(2012, 2023)
