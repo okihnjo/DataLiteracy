@@ -67,9 +67,9 @@ plt.bar(
     label="Removed",
 )
 
-plt.title("Average Offers Per Month From 2012/01 To 2023/12")
+plt.title("Yearly Rental Offer Distribution From 2012/01 To 2023/12")
 plt.xlabel("Months")
-plt.ylabel("Total Number Of Offers")
+plt.ylabel("Average Number Of Rental Offers")
 plt.xticks(
     months,
     [
