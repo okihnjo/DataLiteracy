@@ -83,7 +83,7 @@ for region in selected_regions:
     x = np.array([region_data['startdate_ordinal'].min(), region_data['startdate_ordinal'].max()])
     y = slope * x + intercept
     ax.plot(x, y)
-    plt.plot(data['startyear'], data['mean_pqm'], marker='.', color=colors[i], label=(str(typ[0:2]).replace("-", "") + f'room{"s" if str(typ[0:1]) == "1" else ""}'))
+    
 # Adding the overall regression line for 'All data'
 x_tue = np.array([df_complete['startdate_ordinal'].min(), df_complete['startdate_ordinal'].max()])
 y_tue = tue_slope * x_tue + tue_intercept
